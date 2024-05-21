@@ -1,6 +1,8 @@
 package main
 
 import (
+    "os"
+    "fmt"
     "bytes"
     "io"
     "log"
@@ -15,10 +17,24 @@ var (
     cacheMutex = sync.Mutex{}
 )
 
+func getPort() string {
+    // Set a default port
+    defaultPort := "8080"
+
+    // Get the port from the environment variables
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = defaultPort
+        fmt.Printf("No PORT environment variable detected, defaulting to %s\n", defaultPort)
+    }
+    return port
+}
+
 func main() {
     http.HandleFunc("/audio", audioHandler)
-    log.Println("Starting server on :8080")
-    log.Fatal(http.ListenAndServe(":8080", nil))
+    port := getPort()
+    fmt.Printf("Starting server on :%s\n", port)
+    log.Fatal(http.ListenAndServe(":" + port, nil))
 }
 
 func audioHandler(w http.ResponseWriter, r *http.Request) {
