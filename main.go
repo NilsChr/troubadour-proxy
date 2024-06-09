@@ -109,11 +109,14 @@ func audioHandler(w http.ResponseWriter, r *http.Request) {
     log.Println("Serving audio file with Content-Length:", length)
 
     // Set headers to force download and range handling
-    w.Header().Set("Content-Disposition", "attachment; filename="+getFileName(audioURL))
+    // w.Header().Set("Content-Disposition", "attachment; filename="+getFileName(audioURL))
     w.Header().Set("Content-Type", "audio/mpeg")
     w.Header().Set("Accept-Ranges", "bytes")
     w.Header().Set("Content-Length", strconv.FormatInt(length, 10))
-    w.Header().Set("Content-Range", "bytes 0-"+strconv.FormatInt(length-1, 10)+"/"+strconv.FormatInt(length, 10))
+    w.Header().Set("Access-Control-Allow-Headers", "Accept-Encoding,Accept-Language,Authorization,Cache-Control,Content-Length,Content-Range,DNT,Pragma,Range,X-Requested-With")
+    w.Header().Set("Access-Control-Allow-Origin", "*")
+    w.Header().Set("Access-Control-Allow-Credentials", "true")
+  //  w.Header().Set("Content-Range", "bytes 0-"+strconv.FormatInt(length-1, 10)+"/"+strconv.FormatInt(length, 10))
 
     // Copy the buffer to the response writer
     w.WriteHeader(http.StatusOK)
